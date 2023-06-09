@@ -1,16 +1,6 @@
 #tfsec:ignore:aws-cloudtrail-require-bucket-access-logging tfsec:ignore:aws-s3-enable-versioning
 resource "aws_s3_bucket" "s3logs" {
   bucket = "${local.name}-s3logs"
-  acl    = "log-delivery-write"
-  policy = data.aws_iam_policy_document.s3logs.json
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
 
   lifecycle_rule {
     id      = "AWSLogs"
@@ -43,6 +33,22 @@ resource "aws_s3_bucket_ownership_controls" "s3logs_controls" {
 resource "aws_s3_bucket_acl" "s3logs_acl" {
   bucket = aws_s3_bucket.s3logs.id
   acl    = "private"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
+  bucket = aws_s3_bucket.s3logs.id
+
+  rule {
+    bucket_key_enabled = false
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "ssl_enforced_bucket" {
+  bucket = aws_s3_bucket.s3logs.id
+  policy = data.aws_iam_policy_document.s3logs.json
 }
 
 data "aws_iam_policy_document" "s3logs" {

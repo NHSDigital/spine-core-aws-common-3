@@ -32,6 +32,19 @@ resource "aws_s3_bucket_public_access_block" "s3logs" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_ownership_controls" "s3logs_controls" {
+  bucket = aws_s3_bucket.s3logs.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "s3logs_acl" {
+  bucket = aws_s3_bucket.s3logs.id
+  acl    = "private"
+}
+
 data "aws_iam_policy_document" "s3logs" {
   statement {
     sid = "AllowSSLRequestsOnly"

@@ -24,30 +24,16 @@ resource "aws_ssm_parameter" "client_cert" {
 }
 resource "aws_ssm_parameter" "client_key" {
   count = var.config.use_secrets_manager == "false" ? 1 : 0
-  name      = "/${local.name}/mesh/MESH_CLIENT_KEY"
-  type      = "SecureString"
-  value     = "To Replace"
-  overwrite = false
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
+  name  = "/${local.name}/mesh/MESH_CLIENT_KEY"
+  type  = "SecureString"
+  value = "To Replace"
 }
 
 resource "aws_ssm_parameter" "shared_key" {
   count = var.config.use_secrets_manager == "false" ? 1 : 0
-  name      = "/${local.name}/mesh/MESH_SHARED_KEY"
-  type      = "SecureString"
-  value     = "To Replace"
-  overwrite = false
-
-  lifecycle {
-    ignore_changes = [
-      value
-    ]
-  }
+  name  = "/${local.name}/mesh/MESH_SHARED_KEY"
+  type  = "SecureString"
+  value = "To Replace"
 }
 
 resource "aws_ssm_parameter" "url" {

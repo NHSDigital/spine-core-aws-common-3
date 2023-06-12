@@ -7,7 +7,7 @@ resource "aws_kms_key" "mesh" {
 }
 
 resource "aws_kms_alias" "mesh" {
-  name          = "alias/${local.name}-client"
+  name          = "alias/${local.name}-client-1"
   target_key_id = aws_kms_key.mesh.key_id
 }
 

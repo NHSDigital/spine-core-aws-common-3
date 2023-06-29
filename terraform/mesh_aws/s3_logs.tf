@@ -31,9 +31,13 @@ resource "aws_s3_bucket_ownership_controls" "s3logs_controls" {
 }
 
 resource "aws_s3_bucket_acl" "s3logs_acl" {
-  depends_on = [aws_s3_bucket_policy.ssl_enforced_bucket]
   bucket     = aws_s3_bucket.s3logs.id
   acl        = "log-delivery-write"
+
+  depends_on = [
+    aws_s3_bucket_policy.ssl_enforced_bucket,
+    aws_s3_bucket_ownership_controls.s3logs_controls
+  ]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
